@@ -200,7 +200,7 @@ const LoginForm: React.FC = () => {
       </div>
 
       <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
-        Don't have an account?{' '}
+        Don&apos;t have an account?{' '}
         <Button
           variant="ghost"
           onClick={() => router.push('/auth/signup')}
