@@ -5,15 +5,19 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { FcGoogle } from 'react-icons/fc';
-import { registerWithEmail, loginWithGoogle } from '@/lib/firebase/auth';
+import { createUserWithEmail, loginWithGoogle } from '@/lib/firebase/auth';
 import Button from '@/components/ui/Button';
 
 type SignupFormData = {
-  name: string;
   email: string;
   password: string;
   confirmPassword: string;
 };
+
+interface FirebaseErrorWithMessage extends Error {
+  message: string;
+  code?: string;
+}
 
 const SignupForm: React.FC = () => {
   const router = useRouter();
@@ -24,25 +28,31 @@ const SignupForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
+    watch,
   } = useForm<SignupFormData>();
 
   const password = watch('password');
 
   const onSubmit = async (data: SignupFormData) => {
+    if (data.password !== data.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
     try {
-      await registerWithEmail(data.email, data.password, data.name);
+      await createUserWithEmail(data.email, data.password);
       setSuccess('Account created successfully! Please verify your email before logging in.');
       setTimeout(() => {
-        router.push('/auth/login');
+        router.push('/dashboard');
       }, 3000);
-    } catch (err: any) {
-      console.error('Registration error:', err);
-      setError(err.message || 'Failed to create account. Please try again.');
+    } catch (err: unknown) {
+      console.error('Signup error:', err);
+      const firebaseError = err as FirebaseErrorWithMessage;
+      setError(firebaseError.message || 'Failed to create account. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -55,9 +65,10 @@ const SignupForm: React.FC = () => {
     try {
       await loginWithGoogle();
       router.push('/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Google sign-in error:', err);
-      setError(err.message || 'Failed to sign in with Google. Please try again.');
+      const firebaseError = err as FirebaseErrorWithMessage;
+      setError(firebaseError.message || 'Failed to sign in with Google. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -83,33 +94,6 @@ const SignupForm: React.FC = () => {
               <p className="text-red-700 dark:text-red-200">{error}</p>
             </div>
           )}
-
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >
-              Full Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-              placeholder="John Doe"
-              {...register('name', {
-                required: 'Name is required',
-                minLength: {
-                  value: 2,
-                  message: 'Name must be at least 2 characters',
-                },
-              })}
-            />
-            {errors.name && (
-              <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                {errors.name.message}
-              </p>
-            )}
-          </div>
 
           <div className="mb-4">
             <label

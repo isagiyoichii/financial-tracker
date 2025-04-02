@@ -7,11 +7,17 @@ import { motion } from 'framer-motion';
 import { FcGoogle } from 'react-icons/fc';
 import { loginWithEmail, loginWithGoogle, resetPassword } from '@/lib/firebase/auth';
 import Button from '@/components/ui/Button';
+import { FirebaseError } from 'firebase/app';
 
 type LoginFormData = {
   email: string;
   password: string;
 };
+
+interface FirebaseErrorWithMessage extends Error {
+  message: string;
+  code?: string;
+}
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -33,9 +39,10 @@ const LoginForm: React.FC = () => {
     try {
       await loginWithEmail(data.email, data.password);
       router.push('/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Login error:', err);
-      setError(err.message || 'Failed to login. Please try again.');
+      const firebaseError = err as FirebaseErrorWithMessage;
+      setError(firebaseError.message || 'Failed to login. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -48,9 +55,10 @@ const LoginForm: React.FC = () => {
     try {
       await loginWithGoogle();
       router.push('/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Google sign-in error:', err);
-      setError(err.message || 'Failed to sign in with Google. Please try again.');
+      const firebaseError = err as FirebaseErrorWithMessage;
+      setError(firebaseError.message || 'Failed to sign in with Google. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -68,9 +76,10 @@ const LoginForm: React.FC = () => {
     try {
       await resetPassword(resetEmail);
       setResetSent(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Password reset error:', err);
-      setError(err.message || 'Failed to send reset email. Please try again.');
+      const firebaseError = err as FirebaseErrorWithMessage;
+      setError(firebaseError.message || 'Failed to send reset email. Please try again.');
     } finally {
       setIsLoading(false);
     }

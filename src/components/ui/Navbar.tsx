@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/context/auth-context';
 import { useTheme } from '@/lib/context/theme-context';
@@ -93,10 +94,12 @@ const Navbar: React.FC = () => {
                 <Link href="/settings" className="p-2">
                   <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
                     {user.photoURL ? (
-                      <img
+                      <Image
                         className="h-8 w-8 rounded-full"
                         src={user.photoURL}
                         alt="User profile"
+                        width={32}
+                        height={32}
                       />
                     ) : (
                       <UserCircleIcon className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />

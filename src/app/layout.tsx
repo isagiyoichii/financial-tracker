@@ -7,8 +7,8 @@ import { ThemeProvider } from '@/lib/context/theme-context';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'FinTrack - Personal Budgeting and Net Worth Tracking',
-  description: 'Track your expenses, budget, and net worth all in one place',
+  title: 'Financial Tracker',
+  description: 'Track your finances, budget, and net worth',
 };
 
 export default function RootLayout({

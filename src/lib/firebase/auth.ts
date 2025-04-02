@@ -13,13 +13,32 @@ import { auth, db, storage } from './config';
 import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+// Helper to ensure auth is initialized
+const getAuthInstance = () => {
+  if (!auth) throw new Error('Firebase Auth not initialized');
+  return auth;
+};
+
+// Helper to ensure db is initialized
+const getDbInstance = () => {
+  if (!db) throw new Error('Firestore not initialized');
+  return db;
+};
+
+// Helper to ensure storage is initialized
+const getStorageInstance = () => {
+  if (!storage) throw new Error('Firebase Storage not initialized');
+  return storage;
+};
+
 // Sign in with email and password
 export const loginWithEmail = async (email: string, password: string) => {
-  return signInWithEmailAndPassword(auth, email, password);
+  return signInWithEmailAndPassword(getAuthInstance(), email, password);
 };
 
 // Sign up with email and password
 export const registerWithEmail = async (email: string, password: string, name: string) => {
+  const auth = getAuthInstance();
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   const user = userCredential.user;
   
@@ -29,7 +48,7 @@ export const registerWithEmail = async (email: string, password: string, name: s
   });
   
   // Create user document in Firestore
-  await setDoc(doc(db, 'users', user.uid), {
+  await setDoc(doc(getDbInstance(), 'users', user.uid), {
     uid: user.uid,
     email,
     displayName: name,
@@ -53,15 +72,15 @@ export const registerWithEmail = async (email: string, password: string, name: s
 // Sign in with Google
 export const loginWithGoogle = async () => {
   const provider = new GoogleAuthProvider();
-  const userCredential = await signInWithPopup(auth, provider);
+  const userCredential = await signInWithPopup(getAuthInstance(), provider);
   const user = userCredential.user;
   
   // Check if user document exists in Firestore
-  const userDoc = await getDoc(doc(db, 'users', user.uid));
+  const userDoc = await getDoc(doc(getDbInstance(), 'users', user.uid));
   
   // If user doesn't exist, create a new document
   if (!userDoc.exists()) {
-    await setDoc(doc(db, 'users', user.uid), {
+    await setDoc(doc(getDbInstance(), 'users', user.uid), {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
@@ -82,12 +101,12 @@ export const loginWithGoogle = async () => {
 
 // Sign out
 export const logout = async () => {
-  return signOut(auth);
+  return signOut(getAuthInstance());
 };
 
 // Reset password
 export const resetPassword = async (email: string) => {
-  return sendPasswordResetEmail(auth, email);
+  return sendPasswordResetEmail(getAuthInstance(), email);
 };
 
 // Update user profile
@@ -95,7 +114,7 @@ export const updateUserProfile = async (user: User, data: { displayName?: string
   await updateProfile(user, data);
   
   // Update Firestore document
-  await updateDoc(doc(db, 'users', user.uid), {
+  await updateDoc(doc(getDbInstance(), 'users', user.uid), {
     ...data,
     updatedAt: serverTimestamp()
   });
@@ -105,7 +124,7 @@ export const updateUserProfile = async (user: User, data: { displayName?: string
 
 // Upload profile picture
 export const uploadProfilePicture = async (user: User, file: File) => {
-  const storageRef = ref(storage, `users/${user.uid}/profile-picture`);
+  const storageRef = ref(getStorageInstance(), `users/${user.uid}/profile-picture`);
   
   // Upload file
   await uploadBytes(storageRef, file);
@@ -117,4 +136,29 @@ export const uploadProfilePicture = async (user: User, file: File) => {
   await updateUserProfile(user, { photoURL: downloadURL });
   
   return downloadURL;
+};
+
+// Sign up with email and password (alias for registerWithEmail to match what's used in SignupForm)
+export const createUserWithEmail = async (email: string, password: string) => {
+  const auth = getAuthInstance();
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
+  
+  // Create user document in Firestore
+  await setDoc(doc(getDbInstance(), 'users', user.uid), {
+    uid: user.uid,
+    email,
+    displayName: user.displayName || email.split('@')[0],
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+    photoURL: null,
+    phoneNumber: null,
+    settings: {
+      darkMode: false,
+      notifications: true,
+      currency: 'USD',
+    }
+  });
+  
+  return userCredential;
 }; 
