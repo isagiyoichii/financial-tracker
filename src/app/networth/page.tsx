@@ -389,7 +389,7 @@ export default function NetWorth() {
       type: liability.type,
       description: liability.description || '',
       interestRate: liability.interestRate?.toString() || '',
-      dueDate: liability.dueDate ? formatDate(toJsDate(liability.dueDate)) : ''
+      dueDate: liability.dueDate ? formatDate(liability.dueDate as Date | Timestamp) : ''
     });
     setShowLiabilityForm(true);
   };
@@ -912,7 +912,7 @@ export default function NetWorth() {
                           <p className="text-sm text-gray-500 dark:text-gray-400">
                             {liabilityTypes.find(t => t.value === liability.type)?.label || liability.type}
                             {liability.interestRate && ` • ${liability.interestRate}% interest`}
-                            {liability.dueDate && ` • Due: ${formatDate(toJsDate(liability.dueDate))}`}
+                            {liability.dueDate && ` • Due: ${formatDate(liability.dueDate as Date | Timestamp)}`}
                           </p>
                         </div>
                         <div className="flex items-center space-x-4">
