@@ -410,7 +410,7 @@ const Dashboard = () => {
             <Card 
               title="Recent Transactions" 
               subtitle="Your most recent financial activities"
-              variant={isFerrariMode ? 'luxury' : 'default'}
+              className={isFerrariMode ? 'bg-gradient-to-br from-gray-900 to-black border border-red-600 text-white' : ''}
             >
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -466,8 +466,7 @@ const Dashboard = () => {
               title="Income"
               subtitle="This month"
               icon={<ArrowTrendingUpIcon className="h-6 w-6" />}
-              className="h-full"
-              variant={isFerrariMode ? 'luxury' : 'default'}
+              className={`h-full ${isFerrariMode ? 'bg-gradient-to-br from-gray-900 to-black border border-red-600 text-white' : ''}`}
             >
               <p className={`text-2xl font-bold ${
                 isFerrariMode ? 'text-green-400' : 'text-green-600 dark:text-green-400'
@@ -482,8 +481,7 @@ const Dashboard = () => {
               title="Expenses"
               subtitle="This month"
               icon={<ArrowTrendingDownIcon className="h-6 w-6" />}
-              className="h-full"
-              variant={isFerrariMode ? 'luxury' : 'default'}
+              className={`h-full ${isFerrariMode ? 'bg-gradient-to-br from-gray-900 to-black border border-red-600 text-white' : ''}`}
             >
               <p className={`text-2xl font-bold ${
                 isFerrariMode ? 'text-red-400' : 'text-rose-600 dark:text-rose-400'
@@ -498,8 +496,7 @@ const Dashboard = () => {
               title="Net Cash Flow"
               subtitle="Income - Expenses"
               icon={<BanknotesIcon className="h-6 w-6" />}
-              className="h-full" 
-              variant={isFerrariMode ? 'luxury' : 'default'}
+              className={`h-full ${isFerrariMode ? 'bg-gradient-to-br from-gray-900 to-black border border-red-600 text-white' : ''}`} 
             >
               <p className={`text-2xl font-bold ${
                 netIncome >= 0 
@@ -516,8 +513,7 @@ const Dashboard = () => {
               title="Net Worth"
               subtitle="Assets - Liabilities"
               icon={<ScaleIcon className="h-6 w-6" />}
-              className="h-full"
-              variant={isFerrariMode ? 'luxury' : 'default'}
+              className={`h-full ${isFerrariMode ? 'bg-gradient-to-br from-gray-900 to-black border border-red-600 text-white' : ''}`}
             >
               <p className={`text-2xl font-bold ${
                 netWorth >= 0 
@@ -535,8 +531,7 @@ const Dashboard = () => {
           <motion.div variants={item}>
             <Card 
               title="Expense Breakdown" 
-              className="h-full"
-              variant={isFerrariMode ? 'luxury' : 'default'}
+              className={`h-full ${isFerrariMode ? 'bg-gradient-to-br from-gray-900 to-black border border-red-600 text-white' : ''}`}
             >
               <div className="h-64">
                 <Pie 
@@ -561,8 +556,7 @@ const Dashboard = () => {
           <motion.div variants={item}>
             <Card 
               title="Income/Expense Trend" 
-              className="h-full"
-              variant={isFerrariMode ? 'luxury' : 'default'}
+              className={`h-full ${isFerrariMode ? 'bg-gradient-to-br from-gray-900 to-black border border-red-600 text-white' : ''}`}
             >
               <div className="h-64">
                 <Line 
@@ -609,7 +603,7 @@ const Dashboard = () => {
             <Card 
               title="Budget Status" 
               subtitle="Your spending vs. your budget"
-              variant={isFerrariMode ? 'luxury' : 'default'}
+              className={isFerrariMode ? 'bg-gradient-to-br from-gray-900 to-black border border-red-600 text-white' : ''}
             >
               <div className="space-y-4">
                 {budgets.length > 0 ? (
@@ -657,7 +651,7 @@ const Dashboard = () => {
             <Card 
               title="Recent Activity" 
               subtitle="Latest transactions & changes"
-              variant={isFerrariMode ? 'luxury' : 'default'}
+              className={isFerrariMode ? 'bg-gradient-to-br from-gray-900 to-black border border-red-600 text-white' : ''}
             >
               <div className="space-y-4">
                 {transactions.length > 0 ? (
