@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 // User related types
 export interface UserProfile {
   uid: string;
@@ -5,8 +7,8 @@ export interface UserProfile {
   displayName: string;
   photoURL: string | null;
   phoneNumber: string | null;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
   settings: UserSettings;
 }
 
@@ -24,26 +26,27 @@ export interface Transaction {
   type: 'income' | 'expense';
   category: string;
   description: string;
-  date: Date;
+  date: Date | Timestamp;
   isRecurring: boolean;
   recurringPeriod?: 'daily' | 'weekly' | 'monthly' | 'yearly';
   receiptUrl?: string;
   tags?: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
 }
 
 // Budget related types
 export interface Budget {
   id: string;
   userId: string;
+  name: string;
   category: string;
   amount: number;
   period: 'weekly' | 'monthly' | 'yearly';
-  startDate: Date;
-  endDate?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  startDate: Date | Timestamp;
+  endDate?: Date | Timestamp;
+  createdAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
 }
 
 // Net Worth related types
@@ -56,9 +59,9 @@ export interface Asset {
   description?: string;
   location?: string;
   growthRate?: number;
-  lastUpdated: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  lastUpdated: Date | Timestamp;
+  createdAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
 }
 
 export interface Liability {
@@ -69,10 +72,10 @@ export interface Liability {
   amount: number;
   interestRate?: number;
   minimumPayment?: number;
-  dueDate?: Date;
+  dueDate?: Date | Timestamp;
   description?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
 }
 
 // Category related types
@@ -83,8 +86,8 @@ export interface Category {
   type: 'income' | 'expense';
   icon?: string;
   color?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
 }
 
 // Goal related types
@@ -94,13 +97,13 @@ export interface Goal {
   name: string;
   targetAmount: number;
   currentAmount: number;
-  deadline?: Date;
+  deadline?: Date | Timestamp;
   category?: string;
   icon?: string;
   color?: string;
   status: 'in_progress' | 'completed' | 'cancelled';
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
 }
 
 // Investment related types
@@ -113,8 +116,8 @@ export interface Investment {
   shares: number;
   purchasePrice: number;
   currentPrice: number;
-  purchaseDate: Date;
+  purchaseDate: Date | Timestamp;
   notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
 } 
