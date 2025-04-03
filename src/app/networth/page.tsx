@@ -503,7 +503,7 @@ export default function NetWorth() {
             <p className="text-2xl font-bold text-green-600 dark:text-green-400">{formatCurrency(totalAssets)}</p>
             <div className="mt-4 flex justify-end">
               <Button
-                variant="light"
+                variant="secondary"
                 size="sm"
                 icon={<PlusIcon className="h-4 w-4" />}
                 onClick={() => {
@@ -527,7 +527,7 @@ export default function NetWorth() {
             <p className="text-2xl font-bold text-rose-600 dark:text-rose-400">{formatCurrency(totalLiabilities)}</p>
             <div className="mt-4 flex justify-end">
               <Button
-                variant="light"
+                variant="secondary"
                 size="sm"
                 icon={<PlusIcon className="h-4 w-4" />}
                 onClick={() => {
@@ -665,7 +665,7 @@ export default function NetWorth() {
               
               <div className="flex justify-end space-x-3">
                 <Button
-                  variant="light"
+                  variant="secondary"
                   onClick={resetAssetForm}
                   type="button"
                 >
@@ -792,7 +792,7 @@ export default function NetWorth() {
               
               <div className="flex justify-end space-x-3">
                 <Button
-                  variant="light"
+                  variant="secondary"
                   onClick={resetLiabilityForm}
                   type="button"
                 >
