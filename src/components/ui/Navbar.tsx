@@ -22,7 +22,7 @@ import {
 
 const Navbar: React.FC = () => {
   const { user } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { isDarkMode, toggleTheme } = useTheme();
   const pathname = usePathname();
 
   const handleLogout = async () => {
@@ -84,7 +84,7 @@ const Navbar: React.FC = () => {
               onClick={toggleTheme}
               className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none"
             >
-              {theme === 'dark' ? (
+              {isDarkMode ? (
                 <SunIcon className="h-6 w-6" />
               ) : (
                 <MoonIcon className="h-6 w-6" />
