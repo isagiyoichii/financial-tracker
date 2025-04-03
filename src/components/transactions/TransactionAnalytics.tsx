@@ -17,7 +17,7 @@ import {
 } from 'chart.js';
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns';
-import { Transaction } from '@/types/transaction';
+import { Transaction } from '@/lib/types';
 
 // Register ChartJS components
 ChartJS.register(

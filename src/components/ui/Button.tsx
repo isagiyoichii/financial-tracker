@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 interface ButtonProps {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'info' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'info' | 'ghost' | 'ferrari';
   size?: 'sm' | 'md' | 'lg';
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
@@ -17,7 +17,7 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({
   children,
-  variant = 'primary',
+  variant = 'ferrari',
   size = 'md',
   icon,
   iconPosition = 'left',
@@ -28,16 +28,17 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   isLoading = false,
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-sm transition-all duration-200';
+  const baseClasses = 'inline-flex items-center justify-center font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-sm transition-all duration-200';
   
   const variantClasses = {
-    primary: 'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white focus:ring-indigo-500',
-    secondary: 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 focus:ring-gray-500',
-    danger: 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white focus:ring-red-500',
-    success: 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white focus:ring-green-500',
-    warning: 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white focus:ring-yellow-500',
-    info: 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white focus:ring-blue-500',
-    ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 focus:ring-gray-500'
+    primary: 'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white focus:ring-indigo-500 rounded-md',
+    secondary: 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 focus:ring-gray-500 rounded-md',
+    danger: 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white focus:ring-red-500 rounded-md',
+    success: 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white focus:ring-green-500 rounded-md',
+    warning: 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white focus:ring-yellow-500 rounded-md',
+    info: 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white focus:ring-blue-500 rounded-md',
+    ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 focus:ring-gray-500 rounded-md',
+    ferrari: 'bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white focus:ring-red-500 rounded-none uppercase tracking-wider font-bold'
   };
   
   const sizeClasses = {
@@ -49,6 +50,12 @@ const Button: React.FC<ButtonProps> = ({
   const disabledClasses = disabled || isLoading ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-md';
   const widthClasses = fullWidth ? 'w-full' : '';
   
+  // Special styling for Ferrari variant
+  const ferrariStyle = variant === 'ferrari' ? {
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)',
+    textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)'
+  } : {};
+  
   return (
     <motion.button
       type={type}
@@ -56,11 +63,14 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled || isLoading}
       whileTap={{ scale: disabled || isLoading ? 1 : 0.97 }}
-      whileHover={{ 
-        scale: disabled || isLoading ? 1 : 1.02,
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-      }}
+      whileHover={!disabled && !isLoading ? { 
+        scale: variant === 'ferrari' ? 1.03 : 1.02,
+        boxShadow: variant === 'ferrari' 
+          ? '0 10px 15px -3px rgba(220, 38, 38, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15)'
+          : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+      } : {}}
       transition={{ duration: 0.2 }}
+      style={ferrariStyle}
     >
       {isLoading ? (
         <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -70,8 +80,13 @@ const Button: React.FC<ButtonProps> = ({
       ) : (
         icon && iconPosition === 'left' && <span className="mr-2">{icon}</span>
       )}
-      <span className="font-medium">{children}</span>
+      <span className={`font-medium ${variant === 'ferrari' ? 'font-bold' : ''}`}>{children}</span>
       {!isLoading && icon && iconPosition === 'right' && <span className="ml-2">{icon}</span>}
+      
+      {/* Add the signature red accent for Ferrari variant */}
+      {variant === 'ferrari' && (
+        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-yellow-400"></span>
+      )}
     </motion.button>
   );
 };

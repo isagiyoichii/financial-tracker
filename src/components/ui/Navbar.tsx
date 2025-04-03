@@ -44,13 +44,13 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-sm">
+    <nav className="ferrari-nav shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link href={user ? '/dashboard' : '/'} className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
-                FinTrack
+              <Link href={user ? '/dashboard' : '/'} className="ferrari-text text-xl font-bold text-ferrari-red">
+                <span className="text-white">Fin</span><span className="text-ferrari-red">TRACK</span>
               </Link>
             </div>
             
@@ -66,9 +66,9 @@ const Navbar: React.FC = () => {
                       href={item.href}
                       className={`${
                         isActive
-                          ? 'border-indigo-500 text-gray-900 dark:text-gray-100'
-                          : 'border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300'
-                      } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+                          ? 'border-ferrari-red text-white'
+                          : 'border-transparent text-gray-400 hover:text-gray-300'
+                      } ferrari-nav-link inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
                     >
                       <Icon className="h-5 w-5 mr-1" />
                       {item.name}
@@ -80,50 +80,64 @@ const Navbar: React.FC = () => {
           </div>
           
           <div className="flex items-center">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none"
-            >
-              {isDarkMode ? (
-                <SunIcon className="h-6 w-6" />
-              ) : (
-                <MoonIcon className="h-6 w-6" />
-              )}
-            </button>
-            
             {user ? (
-              <div className="ml-3 flex items-center">
-                <Link href="/settings" className="p-2">
-                  <div className="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center">
-                    {user.photoURL ? (
-                      <Image
-                        className="h-8 w-8 rounded-full"
-                        src={user.photoURL}
-                        alt="User profile"
-                        width={32}
-                        height={32}
-                      />
-                    ) : (
-                      <UserCircleIcon className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-                    )}
-                  </div>
-                </Link>
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={toggleTheme}
+                  className="text-gray-400 hover:text-white p-1 rounded-full focus:outline-none"
+                >
+                  {isDarkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
+                </button>
                 
                 <button
                   onClick={handleLogout}
-                  className="ml-2 p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  className="ferrari-button px-3 py-1.5 text-sm"
                 >
-                  <ArrowLeftOnRectangleIcon className="h-6 w-6" />
+                  Logout
                 </button>
+                
+                <div className="flex items-center">
+                  <Link href="/settings" className="flex items-center text-gray-300 hover:text-white">
+                    {user.photoURL ? (
+                      <Image
+                        src={user.photoURL}
+                        alt={user.displayName || 'User'}
+                        width={32}
+                        height={32}
+                        className="rounded-full border-2 border-gray-600"
+                      />
+                    ) : (
+                      <div className="bg-ferrari-red rounded-full p-1">
+                        <UserCircleIcon className="h-6 w-6 text-white" />
+                      </div>
+                    )}
+                  </Link>
+                </div>
               </div>
             ) : (
-              <Link
-                href="/auth/login"
-                className="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                <ArrowRightOnRectangleIcon className="h-5 w-5 mr-1" />
-                Login
-              </Link>
+              <div className="flex items-center space-x-4">
+                <Link
+                  href="/auth/login"
+                  className="ferrari-nav-link text-gray-300 hover:text-white"
+                >
+                  <ArrowRightOnRectangleIcon className="h-5 w-5 mr-1" />
+                  Login
+                </Link>
+                
+                <Link
+                  href="/auth/signup"
+                  className="ferrari-button px-3 py-1.5 text-sm"
+                >
+                  Sign Up
+                </Link>
+                
+                <button
+                  onClick={toggleTheme}
+                  className="text-gray-400 hover:text-white p-1 rounded-full focus:outline-none"
+                >
+                  {isDarkMode ? <SunIcon className="h-6 w-6" /> : <MoonIcon className="h-6 w-6" />}
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -131,7 +145,7 @@ const Navbar: React.FC = () => {
       
       {/* Mobile menu - only visible when user is logged in */}
       {user && (
-        <div className="sm:hidden border-t border-gray-200 dark:border-gray-700">
+        <div className="sm:hidden border-t border-gray-700">
           <div className="flex justify-between px-4 py-3 space-x-2 overflow-x-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -143,8 +157,8 @@ const Navbar: React.FC = () => {
                   href={item.href}
                   className={`${
                     isActive
-                      ? 'text-indigo-600 dark:text-indigo-400'
-                      : 'text-gray-500 dark:text-gray-400'
+                      ? 'text-ferrari-red'
+                      : 'text-gray-400 hover:text-gray-300'
                   } flex flex-col items-center text-xs font-medium`}
                 >
                   <Icon className="h-6 w-6" />

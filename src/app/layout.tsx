@@ -19,11 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <div className="ferrari-theme min-h-screen">
+              {children}
+            </div>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
