@@ -27,6 +27,7 @@ export interface Transaction {
   category: string;
   description: string;
   date: Date | Timestamp;
+  paymentMethod?: string;
   isRecurring: boolean;
   recurringPeriod?: 'daily' | 'weekly' | 'monthly' | 'yearly';
   receiptUrl?: string;

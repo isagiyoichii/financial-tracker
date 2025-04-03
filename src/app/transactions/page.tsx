@@ -28,6 +28,8 @@ import {
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { Transaction } from '@/lib/types';
+import { useRouter } from 'next/navigation';
+// import TransactionAnalytics from '@/components/transactions/TransactionAnalytics';
 
 import {
   ArrowTrendingUpIcon,
@@ -302,12 +304,17 @@ export default function Transactions() {
       amount: transaction.amount.toString(),
       category: transaction.category,
       date: dateStr,
-      paymentMethod: 'Other',
-      description: transaction.description
+      paymentMethod: transaction.paymentMethod || 'Other',
+      description: transaction.description || ''
     });
     
     setEditingId(transaction.id);
     setShowForm(true);
+    
+    // Scroll to form
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
   };
 
   // Apply filters to transactions
@@ -634,6 +641,27 @@ export default function Transactions() {
             </Card>
           </motion.div>
         </div>
+
+        {/* Transaction Analytics */}
+        {transactions.length > 0 && (
+          <motion.div variants={item}>
+            <Card title="Transaction Analytics" subtitle="Visual representation of your spending">
+              <div className="flex justify-center p-4">
+                <Button
+                  variant="primary"
+                  onClick={() => window.location.href = '/analytics'}
+                >
+                  View Detailed Analytics
+                </Button>
+              </div>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 text-center">
+                <p className="text-gray-500 dark:text-gray-400">
+                  Enhanced analytics and visualizations are available on the Analytics page
+                </p>
+              </div>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Transactions List */}
         <motion.div variants={item}>

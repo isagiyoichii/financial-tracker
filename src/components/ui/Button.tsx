@@ -28,25 +28,25 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   isLoading = false,
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200';
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 shadow-sm transition-all duration-200';
   
   const variantClasses = {
-    primary: 'bg-indigo-600 hover:bg-indigo-700 text-white focus:ring-indigo-500',
-    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 focus:ring-gray-500',
-    danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
-    success: 'bg-green-600 hover:bg-green-700 text-white focus:ring-green-500',
-    warning: 'bg-yellow-500 hover:bg-yellow-600 text-white focus:ring-yellow-500',
-    info: 'bg-blue-500 hover:bg-blue-600 text-white focus:ring-blue-500',
+    primary: 'bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white focus:ring-indigo-500',
+    secondary: 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 focus:ring-gray-500',
+    danger: 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white focus:ring-red-500',
+    success: 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white focus:ring-green-500',
+    warning: 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white focus:ring-yellow-500',
+    info: 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white focus:ring-blue-500',
     ghost: 'bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 focus:ring-gray-500'
   };
   
   const sizeClasses = {
-    sm: 'px-2.5 py-1.5 text-xs',
+    sm: 'px-3 py-1.5 text-xs',
     md: 'px-4 py-2 text-sm',
     lg: 'px-6 py-3 text-base'
   };
   
-  const disabledClasses = disabled || isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-md active:scale-95';
+  const disabledClasses = disabled || isLoading ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-md';
   const widthClasses = fullWidth ? 'w-full' : '';
   
   return (
@@ -55,9 +55,12 @@ const Button: React.FC<ButtonProps> = ({
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${widthClasses} ${className}`}
       onClick={onClick}
       disabled={disabled || isLoading}
-      whileTap={{ scale: disabled || isLoading ? 1 : 0.95 }}
-      whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
-      transition={{ duration: 0.1 }}
+      whileTap={{ scale: disabled || isLoading ? 1 : 0.97 }}
+      whileHover={{ 
+        scale: disabled || isLoading ? 1 : 1.02,
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+      }}
+      transition={{ duration: 0.2 }}
     >
       {isLoading ? (
         <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -67,7 +70,7 @@ const Button: React.FC<ButtonProps> = ({
       ) : (
         icon && iconPosition === 'left' && <span className="mr-2">{icon}</span>
       )}
-      {children}
+      <span className="font-medium">{children}</span>
       {!isLoading && icon && iconPosition === 'right' && <span className="ml-2">{icon}</span>}
     </motion.button>
   );
