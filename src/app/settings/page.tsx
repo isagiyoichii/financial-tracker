@@ -622,7 +622,7 @@ export default function Settings() {
                 </p>
                 <div className="mt-4">
                   <Button
-                    variant="light"
+                    variant="secondary"
                     size="sm"
                   >
                     Export Data (CSV)
