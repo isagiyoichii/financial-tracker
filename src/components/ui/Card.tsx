@@ -2,67 +2,29 @@ import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 
 interface CardProps {
-  title?: string;
-  subtitle?: string;
-  icon?: ReactNode;
   children: ReactNode;
+  title?: string;
   className?: string;
-  onClick?: () => void;
-  animate?: boolean;
+  noPadding?: boolean;
 }
 
-const Card: React.FC<CardProps> = ({
-  title,
-  subtitle,
-  icon,
-  children,
-  className = '',
-  onClick,
-  animate = true,
-}) => {
-  const cardContent = (
-    <div 
-      className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden ${className}`}
-      onClick={onClick}
+const Card: React.FC<CardProps> = ({ children, title, className = '', noPadding = false }) => {
+  return (
+    <motion.div 
+      className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden ${className}`}
+      whileHover={{ y: -2, boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}
+      transition={{ duration: 0.2 }}
     >
-      {(title || icon) && (
-        <div className="p-5 border-b border-gray-100 dark:border-gray-700">
-          <div className="flex items-center">
-            {icon && <div className="mr-3 text-gray-500 dark:text-gray-400">{icon}</div>}
-            <div>
-              {title && (
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                  {title}
-                </h3>
-              )}
-              {subtitle && (
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  {subtitle}
-                </p>
-              )}
-            </div>
-          </div>
+      {title && (
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">{title}</h3>
         </div>
       )}
-      <div className="p-5">{children}</div>
-    </div>
+      <div className={noPadding ? '' : 'p-6'}>
+        {children}
+      </div>
+    </motion.div>
   );
-
-  if (animate) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        whileHover={onClick ? { y: -5, transition: { duration: 0.2 } } : undefined}
-        className={onClick ? 'cursor-pointer' : ''}
-      >
-        {cardContent}
-      </motion.div>
-    );
-  }
-
-  return cardContent;
 };
 
 export default Card;
