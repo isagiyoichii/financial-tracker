@@ -181,7 +181,7 @@ const SignupForm: React.FC = () => {
           <Button
             type="submit"
             variant="primary"
-            fullWidth
+            isFullWidth
             isLoading={isLoading}
           >
             Create Account
@@ -204,7 +204,7 @@ const SignupForm: React.FC = () => {
         <div className="mt-6">
           <Button
             variant="secondary"
-            fullWidth
+            isFullWidth
             onClick={handleGoogleSignIn}
             icon={<FcGoogle className="h-5 w-5" />}
             disabled={isLoading}
