@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { 
-  User as FirebaseUser,
+  User,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -11,7 +11,6 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase/config';
-import { User } from '@/lib/types';
 
 interface AuthContextType {
   user: User | null;
@@ -42,12 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setLoading(true);
       if (firebaseUser) {
-        setUser({
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          displayName: firebaseUser.displayName,
-          photoURL: firebaseUser.photoURL
-        });
+        setUser(firebaseUser);
       } else {
         setUser(null);
       }
