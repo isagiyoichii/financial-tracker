@@ -90,7 +90,7 @@ export default function NetWorth() {
     id: '',
     name: '',
     value: '',
-    type: 'bank',
+    type: 'bank' as const,
     description: '',
     purchaseDate: ''
   });
@@ -99,7 +99,7 @@ export default function NetWorth() {
     id: '',
     name: '',
     amount: '',
-    type: 'credit_card',
+    type: 'credit_card' as const,
     description: '',
     interestRate: '',
     dueDate: ''
@@ -168,7 +168,7 @@ export default function NetWorth() {
       id: '',
       name: '',
       value: '',
-      type: 'bank',
+      type: 'bank' as const,
       description: '',
       purchaseDate: ''
     });
@@ -180,7 +180,7 @@ export default function NetWorth() {
       id: '',
       name: '',
       amount: '',
-      type: 'credit_card',
+      type: 'credit_card' as const,
       description: '',
       interestRate: '',
       dueDate: ''
@@ -207,8 +207,9 @@ export default function NetWorth() {
         userId: user.uid,
         name: assetForm.name,
         value,
-        type: assetForm.type,
+        type: assetForm.type as 'cash' | 'bank' | 'investment' | 'real_estate' | 'vehicle' | 'cryptocurrency' | 'other',
         description: assetForm.description || '',
+        lastUpdated: Timestamp.now(),
         ...(assetForm.purchaseDate && { 
           purchaseDate: Timestamp.fromDate(new Date(assetForm.purchaseDate)) 
         }),
@@ -238,7 +239,12 @@ export default function NetWorth() {
         
         const docRef = await addDoc(collection(db, 'assets'), newAssetData);
         
-        setAssets(prev => [...prev, { id: docRef.id, ...newAssetData } as Asset]);
+        // Using a type assertion to ensure compatibility with the Asset type
+        setAssets(prev => [...prev, { 
+          id: docRef.id, 
+          ...newAssetData,
+          lastUpdated: Timestamp.now() // Make sure required field exists
+        } as unknown as Asset]);
         
         toastSuccess('Asset added successfully');
       }
@@ -621,7 +627,7 @@ export default function NetWorth() {
                   <select
                     id="asset-type"
                     value={assetForm.type}
-                    onChange={(e) => setAssetForm({...assetForm, type: e.target.value})}
+                    onChange={(e) => setAssetForm({...assetForm, type: e.target.value as 'cash' | 'bank' | 'investment' | 'real_estate' | 'vehicle' | 'cryptocurrency' | 'other'})}
                     className="w-full rounded-md border p-2"
                   >
                     {assetTypes.map(type => (
@@ -732,7 +738,7 @@ export default function NetWorth() {
                   <select
                     id="liability-type"
                     value={liabilityForm.type}
-                    onChange={(e) => setLiabilityForm({...liabilityForm, type: e.target.value})}
+                    onChange={(e) => setLiabilityForm({...liabilityForm, type: e.target.value as 'credit_card' | 'loan' | 'mortgage' | 'student_loan' | 'medical' | 'tax' | 'other'})}
                     className="w-full rounded-md border p-2"
                   >
                     {liabilityTypes.map(type => (
