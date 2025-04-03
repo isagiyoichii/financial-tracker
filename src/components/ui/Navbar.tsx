@@ -16,7 +16,8 @@ import {
   MoonIcon,
   ArrowLeftOnRectangleIcon,
   ArrowRightOnRectangleIcon,
-  PresentationChartLineIcon
+  PresentationChartLineIcon,
+  ChartBarIcon
 } from '@heroicons/react/24/outline';
 
 const Navbar: React.FC = () => {
@@ -36,6 +37,7 @@ const Navbar: React.FC = () => {
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
     { name: 'Transactions', href: '/transactions', icon: CurrencyDollarIcon },
     { name: 'Budgeting', href: '/budgeting', icon: ChartPieIcon },
+    { name: 'Analytics', href: '/analytics', icon: ChartBarIcon },
     { name: 'Net Worth', href: '/networth', icon: ScaleIcon },
     { name: 'Investments', href: '/investments', icon: PresentationChartLineIcon },
     { name: 'Settings', href: '/settings', icon: CogIcon },

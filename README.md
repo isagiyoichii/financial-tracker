@@ -103,9 +103,9 @@ FinTrack is a modern, fully-featured personal finance management web application
 
 5. Run the development server:
    ```
-   npm run dev
-   # or
-   yarn dev
+npm run dev
+# or
+yarn dev
    ```
 
 6. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.

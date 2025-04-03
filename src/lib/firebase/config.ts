@@ -4,45 +4,49 @@ import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Firebase configuration object
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBj_vvYzTo7n3GMzj0CVhGDJo68pxOxIQs",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "financial-tracker-hehe.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "financial-tracker-hehe",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "financial-tracker-hehe.firebasestorage.app",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "187772018159",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:187772018159:web:0a5377b7e3036492d5ea1a",
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-8P7PSPBFLP"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'placeholder-api-key',
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'placeholder-auth-domain',
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'placeholder-project-id',
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'placeholder-storage-bucket',
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || 'placeholder-messaging-sender-id',
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || 'placeholder-app-id',
 };
 
-// Initialize Firebase - with safeguards for SSR
-let app: FirebaseApp | null = null;
-let auth: Auth | null = null;
-let db: Firestore | null = null;
-let storage: FirebaseStorage | null = null;
+// Initialize Firebase only if it hasn't been initialized already and we're on the client
+let firebaseApp: FirebaseApp;
+let auth: Auth;
+let db: Firestore;
+let storage: FirebaseStorage;
 
+// Only initialize Firebase on the client side
 if (typeof window !== 'undefined') {
-  // Initialize Firebase only on the client side
-  app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  storage = getStorage(app);
-} else {
-  // Server-side - try/catch to prevent errors during Static Site Generation
   try {
-    app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-    storage = getStorage(app);
+    // Check if Firebase is already initialized
+    if (!getApps().length) {
+      firebaseApp = initializeApp(firebaseConfig);
+    } else {
+      firebaseApp = getApps()[0];
+    }
+
+    // Initialize Firebase services with proper type annotations
+    auth = getAuth(firebaseApp);
+    db = getFirestore(firebaseApp);
+    storage = getStorage(firebaseApp);
   } catch (error) {
-    console.error('Firebase initialization error:', error);
-    // Create empty placeholders
-    app = null;
-    auth = null;
-    db = null;
-    storage = null;
+    console.error("Firebase initialization error:", error);
+    
+    // Create placeholders for server-side rendering
+    // This is a workaround for SSR, these won't actually be used
+    if (typeof window !== "undefined") {
+      throw error; // Re-throw on client side
+    }
   }
+} else {
+  // Server-side - create dummy instances for SSR
+  // These will be properly initialized on the client
+  console.log("Server-side Firebase initialization skipped");
 }
 
-export { app, auth, db, storage }; 
+export { auth, db, storage, firebaseApp }; 

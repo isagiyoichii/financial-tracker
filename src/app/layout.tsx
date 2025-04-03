@@ -7,8 +7,8 @@ import { ThemeProvider } from '@/lib/context/theme-context';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Financial Tracker',
-  description: 'Track your finances, budget, and net worth',
+  title: 'FinTrack - Personal Finance Tracker',
+  description: 'Manage your personal finances, track expenses, and build wealth',
 };
 
 export default function RootLayout({
@@ -19,11 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthProvider>
-          <ThemeProvider>
+        <ThemeProvider>
+          <AuthProvider>
             {children}
-          </ThemeProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
