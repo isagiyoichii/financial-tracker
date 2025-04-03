@@ -550,7 +550,7 @@ export default function Transactions() {
               <div className="flex justify-end space-x-3 pt-2">
                 <Button
                   type="button"
-                  variant="light"
+                  variant="secondary"
                   onClick={() => {
                     setShowForm(false);
                     setEditingId(null);
@@ -642,7 +642,7 @@ export default function Transactions() {
               <div className="flex items-center space-x-2">
                 <Button
                   size="sm"
-                  variant={filterOpen ? "primary" : "light"}
+                  variant={filterOpen ? "primary" : "secondary"}
                   onClick={() => setFilterOpen(!filterOpen)}
                   icon={<FunnelIcon className="h-4 w-4" />}
                 >
@@ -652,7 +652,7 @@ export default function Transactions() {
                 {(typeFilter || categoryFilter || dateFilter) && (
                   <Button
                     size="sm"
-                    variant="light"
+                    variant="secondary"
                     onClick={resetFilters}
                     icon={<XMarkIcon className="h-4 w-4" />}
                   >
@@ -828,7 +828,7 @@ export default function Transactions() {
                 <p className="text-gray-500 dark:text-gray-400 mb-4">No transactions found.</p>
                 {transactions.length > 0 ? (
                   <Button
-                    variant="light"
+                    variant="secondary"
                     size="sm"
                     onClick={resetFilters}
                   >
