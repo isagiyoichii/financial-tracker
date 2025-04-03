@@ -209,7 +209,9 @@ export default function Transactions() {
         description: formData.description,
         date: Timestamp.fromDate(new Date(formData.date)),
         paymentMethod: formData.paymentMethod || 'Other',
-        createdAt: serverTimestamp()
+        isRecurring: false,
+        updatedAt: Timestamp.now(),
+        createdAt: Timestamp.now()
       };
       
       if (editingId) {
@@ -223,7 +225,12 @@ export default function Transactions() {
         setTransactions(prev => 
           prev.map(t => 
             t.id === editingId 
-              ? { ...transactionData, id: editingId } as Transaction
+              ? { 
+                  ...transactionData, 
+                  id: editingId, 
+                  isRecurring: false, 
+                  updatedAt: Timestamp.now() 
+                } as unknown as Transaction
               : t
           )
         );
@@ -233,12 +240,19 @@ export default function Transactions() {
         // Add new transaction
         const docRef = await addDoc(
           collection(db, 'transactions'),
-          transactionData
+          {
+            ...transactionData,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp()
+          }
         );
         
-        // Update local state
+        // Update local state with Timestamp objects instead of FieldValue
         setTransactions(prev => [
-          { id: docRef.id, ...transactionData } as Transaction,
+          { 
+            id: docRef.id, 
+            ...transactionData 
+          } as Transaction,
           ...prev
         ]);
       }
@@ -288,7 +302,7 @@ export default function Transactions() {
       amount: transaction.amount.toString(),
       category: transaction.category,
       date: dateStr,
-      paymentMethod: transaction.paymentMethod || 'Other',
+      paymentMethod: 'Other',
       description: transaction.description
     });
     
