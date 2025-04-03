@@ -78,6 +78,22 @@ export default function Budgeting() {
   // Edit mode state
   const [editingId, setEditingId] = useState<string | null>(null);
 
+  // Reset form to default values
+  const resetForm = () => {
+    setFormData({
+      name: '',
+      amount: '',
+      category: '',
+      period: 'monthly',
+      startDate: '',
+      endDate: '',
+      isEditing: false,
+      currentId: '',
+    });
+    setEditingId(null);
+    setShowForm(false);
+  };
+
   // Animation variants
   const container = {
     hidden: { opacity: 0 },
@@ -253,7 +269,19 @@ export default function Budgeting() {
         toastSuccess('Budget created successfully');
       }
       
-      resetForm();
+      // Reset form to initial state
+      setFormData({
+        name: '',
+        amount: '',
+        category: '',
+        period: 'monthly',
+        startDate: '',
+        endDate: '',
+        isEditing: false,
+        currentId: '',
+      });
+      setEditingId(null);
+      setShowForm(false);
     } catch (error) {
       console.error('Error saving budget:', error);
       toastError('Failed to save budget');
