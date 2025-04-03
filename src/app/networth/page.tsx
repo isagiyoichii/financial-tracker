@@ -70,8 +70,6 @@ const liabilityTypes = [
   { value: 'loan', label: 'Loan' },
   { value: 'mortgage', label: 'Mortgage' },
   { value: 'student_loan', label: 'Student Loan' },
-  { value: 'medical', label: 'Medical Debt' },
-  { value: 'tax', label: 'Tax Debt' },
   { value: 'other', label: 'Other Debt' }
 ];
 
@@ -90,7 +88,7 @@ export default function NetWorth() {
     id: '',
     name: '',
     value: '',
-    type: 'bank' as const,
+    type: 'bank' as Asset['type'],
     description: '',
     purchaseDate: ''
   });
@@ -99,7 +97,7 @@ export default function NetWorth() {
     id: '',
     name: '',
     amount: '',
-    type: 'credit_card' as const,
+    type: 'credit_card' as Liability['type'],
     description: '',
     interestRate: '',
     dueDate: ''
@@ -168,7 +166,7 @@ export default function NetWorth() {
       id: '',
       name: '',
       value: '',
-      type: 'bank' as const,
+      type: 'bank' as Asset['type'],
       description: '',
       purchaseDate: ''
     });
@@ -180,7 +178,7 @@ export default function NetWorth() {
       id: '',
       name: '',
       amount: '',
-      type: 'credit_card' as const,
+      type: 'credit_card' as Liability['type'],
       description: '',
       interestRate: '',
       dueDate: ''
@@ -207,7 +205,7 @@ export default function NetWorth() {
         userId: user.uid,
         name: assetForm.name,
         value,
-        type: assetForm.type as 'cash' | 'bank' | 'investment' | 'real_estate' | 'vehicle' | 'cryptocurrency' | 'other',
+        type: assetForm.type,
         description: assetForm.description || '',
         lastUpdated: Timestamp.now(),
         ...(assetForm.purchaseDate && { 
@@ -242,9 +240,8 @@ export default function NetWorth() {
         // Using a type assertion to ensure compatibility with the Asset type
         setAssets(prev => [...prev, { 
           id: docRef.id, 
-          ...newAssetData,
-          lastUpdated: Timestamp.now() // Make sure required field exists
-        } as unknown as Asset]);
+          ...newAssetData
+        } as Asset]);
         
         toastSuccess('Asset added successfully');
       }
@@ -378,7 +375,7 @@ export default function NetWorth() {
       value: asset.value.toString(),
       type: asset.type,
       description: asset.description || '',
-      purchaseDate: asset.purchaseDate ? formatDate(toJsDate(asset.purchaseDate)) : ''
+      purchaseDate: ''
     });
     setShowAssetForm(true);
   };
@@ -627,7 +624,7 @@ export default function NetWorth() {
                   <select
                     id="asset-type"
                     value={assetForm.type}
-                    onChange={(e) => setAssetForm({...assetForm, type: e.target.value as 'cash' | 'bank' | 'investment' | 'real_estate' | 'vehicle' | 'cryptocurrency' | 'other'})}
+                    onChange={(e) => setAssetForm({...assetForm, type: e.target.value as Asset['type']})}
                     className="w-full rounded-md border p-2"
                   >
                     {assetTypes.map(type => (
@@ -738,7 +735,7 @@ export default function NetWorth() {
                   <select
                     id="liability-type"
                     value={liabilityForm.type}
-                    onChange={(e) => setLiabilityForm({...liabilityForm, type: e.target.value as 'credit_card' | 'loan' | 'mortgage' | 'student_loan' | 'medical' | 'tax' | 'other'})}
+                    onChange={(e) => setLiabilityForm({...liabilityForm, type: e.target.value as Liability['type']})}
                     className="w-full rounded-md border p-2"
                   >
                     {liabilityTypes.map(type => (
@@ -840,7 +837,6 @@ export default function NetWorth() {
                           <h3 className="font-medium text-gray-900 dark:text-white">{asset.name}</h3>
                           <p className="text-sm text-gray-500 dark:text-gray-400">
                             {assetTypes.find(t => t.value === asset.type)?.label || asset.type}
-                            {asset.purchaseDate && ` • Purchased: ${formatDate(toJsDate(asset.purchaseDate))}`}
                           </p>
                         </div>
                         <div className="flex items-center space-x-4">
