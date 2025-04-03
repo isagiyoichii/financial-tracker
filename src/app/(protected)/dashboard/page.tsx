@@ -23,7 +23,9 @@ import {
   ArrowTrendingDownIcon, 
   BanknotesIcon, 
   ScaleIcon,
-  ClockIcon
+  ClockIcon,
+  SparklesIcon,
+  ChevronDownIcon
 } from '@heroicons/react/24/outline';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title } from 'chart.js';
 import { Pie, Line } from 'react-chartjs-2';
@@ -47,6 +49,7 @@ const Dashboard = () => {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFerrariMode, setIsFerrariMode] = useState(false);
 
   const container = {
     hidden: { opacity: 0 },
@@ -368,161 +371,47 @@ const Dashboard = () => {
   const totalLiabilities = calculateTotalLiabilities(liabilities);
   const netWorth = calculateNetWorth(assets, liabilities);
 
+  // Add a toggle function
+  const toggleFerrariMode = () => {
+    setIsFerrariMode(!isFerrariMode);
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">
+    <div className={`container mx-auto px-4 py-8 ${isFerrariMode ? 'ferrari-dashboard' : ''}`}>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className={`text-2xl font-bold ${isFerrariMode ? 'text-white ferrari-text' : 'text-gray-900 dark:text-white'}`}>
           Dashboard
         </h1>
-      </motion.div>
-
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-          <p className="ml-3 text-gray-700 dark:text-gray-300">Loading your financial data...</p>
+        
+        <div className="flex items-center">
+          <button 
+            onClick={toggleFerrariMode}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
+              isFerrariMode 
+                ? 'bg-red-600 text-white' 
+                : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-300'
+            }`}
+          >
+            <SparklesIcon className="h-4 w-4" />
+            {isFerrariMode ? 'Standard Mode' : 'Ferrari Mode'}
+          </button>
         </div>
-      ) : (
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="space-y-8"
-        >
-          {/* Financial summary cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <motion.div variants={item}>
-              <Card
-                title="Income"
-                subtitle="This month"
-                icon={<ArrowTrendingUpIcon className="h-6 w-6" />}
-                className="h-full"
-              >
-                <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                  {formatCurrency(totalIncome)}
-                </p>
-              </Card>
-            </motion.div>
+      </div>
 
-            <motion.div variants={item}>
-              <Card
-                title="Expenses"
-                subtitle="This month"
-                icon={<ArrowTrendingDownIcon className="h-6 w-6" />}
-                className="h-full"
-              >
-                <p className="text-2xl font-bold text-rose-600 dark:text-rose-400">
-                  {formatCurrency(totalExpenses)}
-                </p>
-              </Card>
-            </motion.div>
-
-            <motion.div variants={item}>
-              <Card
-                title="Net Cash Flow"
-                subtitle="Income - Expenses"
-                icon={<BanknotesIcon className="h-6 w-6" />}
-                className="h-full"
-              >
-                <p className={`text-2xl font-bold ${
-                  netIncome >= 0 
-                    ? 'text-green-600 dark:text-green-400' 
-                    : 'text-rose-600 dark:text-rose-400'
-                }`}>
-                  {formatCurrency(netIncome)}
-                </p>
-              </Card>
-            </motion.div>
-
-            <motion.div variants={item}>
-              <Card
-                title="Net Worth"
-                subtitle="Assets - Liabilities"
-                icon={<ScaleIcon className="h-6 w-6" />}
-                className="h-full"
-              >
-                <p className={`text-2xl font-bold ${
-                  netWorth >= 0 
-                    ? 'text-green-600 dark:text-green-400' 
-                    : 'text-rose-600 dark:text-rose-400'
-                }`}>
-                  {formatCurrency(netWorth)}
-                </p>
-              </Card>
-            </motion.div>
-          </div>
-
-          {/* Chart section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <motion.div variants={item}>
-              <Card title="Expense Breakdown" className="h-full">
-                <div className="h-64">
-                  <Pie 
-                    data={pieChartData} 
-                    options={{ 
-                      responsive: true, 
-                      maintainAspectRatio: false,
-                      plugins: {
-                        legend: {
-                          position: 'right',
-                          labels: {
-                            color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151',
-                          }
-                        }
-                      }
-                    }} 
-                  />
-                </div>
-              </Card>
-            </motion.div>
-
-            <motion.div variants={item}>
-              <Card title="Income vs Expenses Trend" className="h-full">
-                <div className="h-64">
-                  <Line 
-                    data={lineChartData} 
-                    options={{ 
-                      responsive: true, 
-                      maintainAspectRatio: false,
-                      scales: {
-                        y: {
-                          beginAtZero: true,
-                          ticks: {
-                            color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151',
-                          },
-                          grid: {
-                            color: document.documentElement.classList.contains('dark') ? 'rgba(243, 244, 246, 0.1)' : 'rgba(55, 65, 81, 0.1)',
-                          }
-                        },
-                        x: {
-                          ticks: {
-                            color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151',
-                          },
-                          grid: {
-                            color: document.documentElement.classList.contains('dark') ? 'rgba(243, 244, 246, 0.1)' : 'rgba(55, 65, 81, 0.1)',
-                          }
-                        }
-                      },
-                      plugins: {
-                        legend: {
-                          labels: {
-                            color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151',
-                          }
-                        }
-                      }
-                    }} 
-                  />
-                </div>
-              </Card>
-            </motion.div>
-          </div>
-
-          {/* Recent transactions */}
-          <motion.div variants={item}>
-            <Card title="Recent Transactions" icon={<ClockIcon className="h-6 w-6" />}>
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="space-y-8"
+      >
+        {/* Recent Transactions section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <motion.div variants={item} className="md:col-span-3">
+            <Card 
+              title="Recent Transactions" 
+              subtitle="Your most recent financial activities"
+              variant={isFerrariMode ? 'luxury' : 'default'}
+            >
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-800">
@@ -568,8 +457,258 @@ const Dashboard = () => {
               </div>
             </Card>
           </motion.div>
-        </motion.div>
-      )}
+        </div>
+
+        {/* Financial Overview section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div variants={item}>
+            <Card
+              title="Income"
+              subtitle="This month"
+              icon={<ArrowTrendingUpIcon className="h-6 w-6" />}
+              className="h-full"
+              variant={isFerrariMode ? 'luxury' : 'default'}
+            >
+              <p className={`text-2xl font-bold ${
+                isFerrariMode ? 'text-green-400' : 'text-green-600 dark:text-green-400'
+              }`}>
+                {formatCurrency(totalIncome)}
+              </p>
+            </Card>
+          </motion.div>
+
+          <motion.div variants={item}>
+            <Card
+              title="Expenses"
+              subtitle="This month"
+              icon={<ArrowTrendingDownIcon className="h-6 w-6" />}
+              className="h-full"
+              variant={isFerrariMode ? 'luxury' : 'default'}
+            >
+              <p className={`text-2xl font-bold ${
+                isFerrariMode ? 'text-red-400' : 'text-rose-600 dark:text-rose-400'
+              }`}>
+                {formatCurrency(totalExpenses)}
+              </p>
+            </Card>
+          </motion.div>
+
+          <motion.div variants={item}>
+            <Card
+              title="Net Cash Flow"
+              subtitle="Income - Expenses"
+              icon={<BanknotesIcon className="h-6 w-6" />}
+              className="h-full" 
+              variant={isFerrariMode ? 'luxury' : 'default'}
+            >
+              <p className={`text-2xl font-bold ${
+                netIncome >= 0 
+                  ? (isFerrariMode ? 'text-green-400' : 'text-green-600 dark:text-green-400')
+                  : (isFerrariMode ? 'text-red-400' : 'text-rose-600 dark:text-rose-400')
+              }`}>
+                {formatCurrency(netIncome)}
+              </p>
+            </Card>
+          </motion.div>
+
+          <motion.div variants={item}>
+            <Card
+              title="Net Worth"
+              subtitle="Assets - Liabilities"
+              icon={<ScaleIcon className="h-6 w-6" />}
+              className="h-full"
+              variant={isFerrariMode ? 'luxury' : 'default'}
+            >
+              <p className={`text-2xl font-bold ${
+                netWorth >= 0 
+                  ? (isFerrariMode ? 'text-green-400' : 'text-green-600 dark:text-green-400')
+                  : (isFerrariMode ? 'text-red-400' : 'text-rose-600 dark:text-rose-400')
+              }`}>
+                {formatCurrency(netWorth)}
+              </p>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Chart section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <motion.div variants={item}>
+            <Card 
+              title="Expense Breakdown" 
+              className="h-full"
+              variant={isFerrariMode ? 'luxury' : 'default'}
+            >
+              <div className="h-64">
+                <Pie 
+                  data={pieChartData} 
+                  options={{ 
+                    responsive: true, 
+                    maintainAspectRatio: false,
+                    plugins: {
+                      legend: {
+                        position: 'right',
+                        labels: {
+                          color: isFerrariMode ? '#ffffff' : (document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151'),
+                        }
+                      }
+                    }
+                  }} 
+                />
+              </div>
+            </Card>
+          </motion.div>
+
+          <motion.div variants={item}>
+            <Card 
+              title="Income/Expense Trend" 
+              className="h-full"
+              variant={isFerrariMode ? 'luxury' : 'default'}
+            >
+              <div className="h-64">
+                <Line 
+                  data={lineChartData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        ticks: {
+                          color: isFerrariMode ? '#ffffff' : undefined
+                        },
+                        grid: {
+                          color: isFerrariMode ? 'rgba(255, 255, 255, 0.1)' : undefined
+                        }
+                      },
+                      x: {
+                        ticks: {
+                          color: isFerrariMode ? '#ffffff' : undefined
+                        },
+                        grid: {
+                          color: isFerrariMode ? 'rgba(255, 255, 255, 0.1)' : undefined
+                        }
+                      }
+                    },
+                    plugins: {
+                      legend: {
+                        labels: {
+                          color: isFerrariMode ? '#ffffff' : undefined
+                        }
+                      }
+                    }
+                  }}
+                />
+              </div>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Budgets & Goals */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <motion.div variants={item}>
+            <Card 
+              title="Budget Status" 
+              subtitle="Your spending vs. your budget"
+              variant={isFerrariMode ? 'luxury' : 'default'}
+            >
+              <div className="space-y-4">
+                {budgets.length > 0 ? (
+                  budgets.map((budget) => {
+                    // Calculate spending for this budget category
+                    const spending = transactions
+                      .filter(t => t.category === budget.category && t.type === 'expense')
+                      .reduce((sum, t) => sum + t.amount, 0);
+                    
+                    const percentage = Math.min(Math.round((spending / budget.amount) * 100), 100);
+                    
+                    return (
+                      <div key={budget.id} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-medium">{budget.name}</span>
+                          <span className="text-sm font-medium">
+                            {formatCurrency(spending)} / {formatCurrency(budget.amount)}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                          <div 
+                            className={`h-2.5 rounded-full ${
+                              percentage > 90 
+                                ? 'bg-red-600'
+                                : percentage > 75
+                                  ? 'bg-yellow-400'
+                                  : 'bg-green-500'
+                            }`}
+                            style={{ width: `${percentage}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div className="text-center py-4 text-gray-500 dark:text-gray-400">
+                    No budgets defined yet.
+                  </div>
+                )}
+              </div>
+            </Card>
+          </motion.div>
+
+          <motion.div variants={item}>
+            <Card 
+              title="Recent Activity" 
+              subtitle="Latest transactions & changes"
+              variant={isFerrariMode ? 'luxury' : 'default'}
+            >
+              <div className="space-y-4">
+                {transactions.length > 0 ? (
+                  transactions.slice(0, 5).map((transaction) => (
+                    <div key={transaction.id} className="flex items-start space-x-3">
+                      <div className={`rounded-full p-2 ${
+                        transaction.type === 'income' 
+                          ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400' 
+                          : 'bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400'
+                      }`}>
+                        {transaction.type === 'income' 
+                          ? <ArrowTrendingUpIcon className="h-4 w-4" />
+                          : <ArrowTrendingDownIcon className="h-4 w-4" />
+                        }
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start">
+                          <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                            {transaction.description}
+                          </p>
+                          <p className={`text-sm font-medium ${
+                            transaction.type === 'income' 
+                              ? 'text-green-600 dark:text-green-400' 
+                              : 'text-rose-600 dark:text-rose-400'
+                          }`}>
+                            {transaction.type === 'income' ? '+' : '-'}
+                            {formatCurrency(transaction.amount)}
+                          </p>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {transaction.category}
+                          </p>
+                          <p className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                            <ClockIcon className="h-3 w-3 mr-1" />
+                            {formatDate(transaction.date, 'MMM d')}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-4 text-gray-500 dark:text-gray-400">
+                    No transactions recorded yet.
+                  </div>
+                )}
+              </div>
+            </Card>
+          </motion.div>
+        </div>
+      </motion.div>
     </div>
   );
 };
