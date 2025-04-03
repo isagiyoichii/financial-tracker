@@ -14,7 +14,9 @@ import {
   calculateNetIncome,
   calculateTotalAssets,
   calculateTotalLiabilities,
-  calculateNetWorth
+  calculateNetWorth,
+  toJsDate,
+  formatDate
 } from '@/lib/utils';
 import { 
   ArrowTrendingUpIcon, 
@@ -200,6 +202,7 @@ const Dashboard = () => {
         {
           id: '1',
           userId: user?.uid || '',
+          name: 'Monthly Rent',
           category: 'Rent',
           amount: 1500,
           period: 'monthly',
@@ -210,6 +213,7 @@ const Dashboard = () => {
         {
           id: '2',
           userId: user?.uid || '',
+          name: 'Grocery Budget',
           category: 'Groceries',
           amount: 600,
           period: 'monthly',
@@ -220,6 +224,7 @@ const Dashboard = () => {
         {
           id: '3',
           userId: user?.uid || '',
+          name: 'Eating Out',
           category: 'Dining',
           amount: 200,
           period: 'monthly',
@@ -230,6 +235,7 @@ const Dashboard = () => {
         {
           id: '4',
           userId: user?.uid || '',
+          name: 'Utility Bills',
           category: 'Utilities',
           amount: 150,
           period: 'monthly',
@@ -539,9 +545,7 @@ const Dashboard = () => {
                     {transactions.slice(0, 5).map((transaction) => (
                       <tr key={transaction.id}>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                          {transaction.date instanceof Date 
-                            ? transaction.date.toLocaleDateString() 
-                            : new Date(transaction.date).toLocaleDateString()}
+                          {formatDate(transaction.date, 'MMM d, yyyy')}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                           {transaction.description}
