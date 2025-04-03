@@ -536,21 +536,13 @@ export default function Budgeting() {
               <div className="flex justify-end space-x-3 pt-2">
                 <Button
                   type="button"
-                  variant="light"
+                  variant="secondary"
                   onClick={() => {
                     setShowForm(false);
                     setEditingId(null);
-                    setFormData({
-                      name: '',
-                      amount: '',
-                      category: '',
-                      period: 'monthly',
-                      startDate: '',
-                      endDate: '',
-                      isEditing: false,
-                      currentId: '',
-                    });
+                    resetForm();
                   }}
+                  className="mr-2"
                 >
                   Cancel
                 </Button>
