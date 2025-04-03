@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { FcGoogle } from 'react-icons/fc';
-import { loginWithEmail, loginWithGoogle, resetPassword } from '@/lib/firebase/auth';
+import { login, signInWithGoogle, resetPassword } from '@/lib/firebase/auth';
 import Button from '@/components/ui/Button';
 import { FirebaseError } from 'firebase/app';
 
@@ -37,7 +37,7 @@ const LoginForm: React.FC = () => {
     setError(null);
 
     try {
-      await loginWithEmail(data.email, data.password);
+      await login(data.email, data.password);
       router.push('/dashboard');
     } catch (err: unknown) {
       console.error('Login error:', err);
@@ -53,7 +53,7 @@ const LoginForm: React.FC = () => {
     setError(null);
 
     try {
-      await loginWithGoogle();
+      await signInWithGoogle();
       router.push('/dashboard');
     } catch (err: unknown) {
       console.error('Google sign-in error:', err);

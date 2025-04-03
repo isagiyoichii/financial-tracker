@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { FcGoogle } from 'react-icons/fc';
-import { createUserWithEmail, loginWithGoogle } from '@/lib/firebase/auth';
+import { signUp, signInWithGoogle } from '@/lib/firebase/auth';
 import Button from '@/components/ui/Button';
 
 type SignupFormData = {
@@ -44,7 +44,7 @@ const SignupForm: React.FC = () => {
     setError(null);
 
     try {
-      await createUserWithEmail(data.email, data.password);
+      await signUp(data.email, data.password, data.email.split('@')[0]);
       setSuccess('Account created successfully! Please verify your email before logging in.');
       setTimeout(() => {
         router.push('/dashboard');
@@ -63,7 +63,7 @@ const SignupForm: React.FC = () => {
     setError(null);
 
     try {
-      await loginWithGoogle();
+      await signInWithGoogle();
       router.push('/dashboard');
     } catch (err: unknown) {
       console.error('Google sign-in error:', err);
